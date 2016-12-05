@@ -3,11 +3,11 @@ package baa.shoppinglist;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class AuthActivity extends AppCompatActivity {
+public class ShopList extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auth);
+        setContentView(R.layout.activity_shop_list);
     }
 }
