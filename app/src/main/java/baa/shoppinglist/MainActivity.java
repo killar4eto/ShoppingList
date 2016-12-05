@@ -15,13 +15,19 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences myPrefs = this.getSharedPreferences("User_info", MODE_PRIVATE);
         String Logged = myPrefs.getString("isLogged", null);
 
-        if(Logged == null){
+        if(Logged == null || Logged == ""){
             Intent intent = new Intent(this, AuthActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
+            finish();
         }
         else{
             Intent intent = new Intent(this, ShopList.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
+            finish();
         }
     }
 }

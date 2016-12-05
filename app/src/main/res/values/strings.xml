@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ShoppingList</string>
+    <string name="user_name">Username</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="user_avatar">User Picture</string>
+    <string name="btn_SignIn">Sign In</string>
 </resources>
