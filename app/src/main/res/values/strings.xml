@@ -2,6 +2,13 @@
     <string name="app_name">ShoppingList</string>
     <string name="user_name">Username</string>
     <string name="enter_password">Enter Password</string>
+    <string name="enter_email">Enter Email</string>
     <string name="user_avatar">User Picture</string>
     <string name="btn_SignIn">Sign In</string>
+    <string name="btn_alreadyExists">Existing Account</string>
+    <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
+    <string name="auth_failed">Authentication failed, check your email and password or sign up</string>
+    <string name="welcome">Welcome to your account</string>
+    <string name="signout">Sign Out</string>
+    <string name="btn_RegisterMe">Register Account</string>
 </resources>

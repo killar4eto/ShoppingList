@@ -12,49 +12,45 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="baa.shoppinglist.AuthActivity">
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="129dp"
-        android:onClick="PickPicture"
-        android:id="@+id/imageButton"
-        android:contentDescription="@string/user_avatar" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="@string/user_name"
+        android:inputType="textEmailAddress"
+        android:hint="@string/enter_email"
         android:ems="10"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/editText"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="23dp"
+        android:id="@+id/userEmail"
         android:layout_alignParentEnd="true"
-        tools:ignore="LabelFor" />
+        android:layout_alignStart="@+id/editText4" />
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
-        android:text="@string/enter_password"
+        android:hint="@string/enter_password"
         android:ems="10"
-        android:layout_below="@+id/editText"
+        android:id="@+id/userPassword"
+        android:layout_below="@+id/userEmail"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="41dp"
-        android:id="@+id/editText2"
-        android:layout_alignParentEnd="true"
-        tools:ignore="LabelFor" />
+        android:layout_marginTop="21dp" />
 
     <Button
         android:text="@string/btn_SignIn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText2"
+        android:id="@+id/SignMe"
+        android:layout_marginTop="27dp"
+        android:layout_below="@+id/userPassword"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="@string/btn_RegisterMe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/RegisterMe"
+        android:layout_below="@+id/SignMe"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="40dp"
-        android:id="@+id/button"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginTop="28dp" />
 </RelativeLayout>
