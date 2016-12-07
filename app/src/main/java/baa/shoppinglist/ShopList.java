@@ -8,53 +8,64 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.firebase.client.Firebase;
 import com.firebase.ui.FirebaseListAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class ShopList extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
+    Firebase conn;
     ListView mListView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop_list);
 
-        Firebase.setAndroidContext(this);
-
-        mAuth = FirebaseAuth.getInstance();
-
-        DatabaseReference mRef = FirebaseDatabase.getInstance().getReferenceFromUrl("https://shoppinglist-cb16c.firebaseio.com/");
-
         mListView = (ListView)findViewById(R.id.listView);
 
-        FirebaseListAdapter<String> myAdapter = new FirebaseListAdapter<String>(this, String.class, android.R.layout.simple_list_item_1, mRef) {
-            @Override
-            protected void populateView(View view, String s, int i) {
-                TextView textView = (TextView)findViewById(android.R.id.text1);
-                textView.setText(s);
-            }
-        };
-        mListView.setAdapter(myAdapter);
+        Firebase.setAndroidContext(this);
+
+        //Connecting to DB
+        conn = new Firebase("https://shoppinglist-cb16c.firebaseio.com/");
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        Firebase ItemRef = conn.child("Items");
+
+            final FirebaseListAdapter<String> adapter =
+                new FirebaseListAdapter<String>(this, String.class, android.R.layout.simple_list_item_1, ItemRef) {
+                    @Override
+                    protected void populateView(View v, String s, final int i) {
+                        TextView textView = (TextView)v.findViewById(android.R.id.text1);
+                        textView.setText(s);
+
+                        v.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(ShopList.this, "Remove item", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                };
+        mListView.setAdapter(adapter);
 
     }
 
-    public void SignOut(View v){
+    public void SignOut(View view){
         //Save token
         SharedPreferences preferences = getSharedPreferences("User_info", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("isLogged", "");
         editor.commit();
 
-        Toast.makeText(ShopList.this, "Bye, bye hope to see you soon.", Toast.LENGTH_SHORT).show();
+        conn.unauth();
 
-        mAuth.signOut();
-
-        startActivity(new Intent(ShopList.this, MainActivity.class));
+        Intent intent = new Intent(ShopList.this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 }
