@@ -49,8 +49,9 @@ public class AuthActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view){
-                String email = userEmail.getText().toString();
-                String password = userPassword.getText().toString();
+
+                final String email = userEmail.getText().toString();
+                final String password = userPassword.getText().toString();
 
                 if(TextUtils.isEmpty(email)){
 
@@ -80,7 +81,7 @@ public class AuthActivity extends AppCompatActivity {
                                 Toast.makeText(AuthActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
 
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(AuthActivity.this, "Authentication failed." + task.getException(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AuthActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     //Save token
                                     SharedPreferences preferences = getSharedPreferences("User_info", MODE_PRIVATE);
@@ -88,6 +89,7 @@ public class AuthActivity extends AppCompatActivity {
                                     editor.putString("isLogged", "Yes");
                                     editor.commit();
 
+                                    progressDialog.dismiss();
                                     startActivity(new Intent(AuthActivity.this, MainActivity.class));
                                     finish();
                                 }
@@ -98,12 +100,14 @@ public class AuthActivity extends AppCompatActivity {
 
         SignMe.setOnClickListener(new View.OnClickListener() {
 
-            String email = userEmail.getText().toString();
-            String password = userPassword.getText().toString();
-
-
             @Override
             public void onClick(View view) {
+
+                final String email = userEmail.getText().toString();
+                final String password = userPassword.getText().toString();
+
+                progressDialog.setMessage("Loading your profile...");
+                progressDialog.show();
 
                 if(TextUtils.isEmpty(email)){
 
@@ -124,7 +128,7 @@ public class AuthActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                Toast.makeText(AuthActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AuthActivity.this, "Success: " + task.isSuccessful(), Toast.LENGTH_SHORT).show();
 
                                 if (!task.isSuccessful()) {
                                     // there was an error
@@ -140,6 +144,7 @@ public class AuthActivity extends AppCompatActivity {
                                     editor.putString("isLogged", "Yes");
                                     editor.commit();
 
+                                    progressDialog.dismiss();
                                     Intent intent = new Intent(AuthActivity.this, ShopList.class);
                                     startActivity(intent);
                                     finish();
