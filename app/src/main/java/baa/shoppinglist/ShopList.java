@@ -1,19 +1,23 @@
 package baa.shoppinglist;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.ui.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import baa.shoppinglist.models.ShoppingItems;
 
@@ -35,18 +39,128 @@ public class ShopList extends AppCompatActivity {
         //Connecting to DB
         conn = new Firebase("https://shoppinglist-cb16c.firebaseio.com/");
 
-        //ShoppingItems as = new ShoppingItems("bananas", 5);
+    }
 
+    //MENU
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.custom_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.additem:
+                AddItem();
+                return true;
+
+            case R.id.share:
+                Share();
+                return true;
+
+            case R.id.clearAll:
+                ClearAll();
+                return true;
+
+            case R.id.changeBG:
+                ChangeBackground();
+                return true;
+
+            case R.id.revertBG:
+                RevertBackground();
+                return true;
+
+            case R.id.signout:
+                SignOut();
+                return true;
+
+            default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void RevertBackground() {
+
+        View mLayout = findViewById(R.id.activity_shop_list);
+
+        mLayout.setBackgroundColor(Color.rgb(219,164,0));
+
+    }
+
+    private void ChangeBackground() {
+        View mLayout = findViewById(R.id.activity_shop_list);
+
+        mLayout.setBackgroundColor(Color.rgb(153, 204, 0));
+    }
+
+    private void Share() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Sending my data...");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
+
+    private void ClearAll() {
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        conn.removeValue();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Clearing the list? Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
+    }
+
+    private void AddItem() {
+
+        Intent intent = new Intent(getBaseContext(), AddItem.class);
+        startActivity(intent);
+        finish();
+
+
+        //ShoppingItems as = new ShoppingItems("NewItemADD", 25);
         //conn.push().setValue(as);
 
+    }
+
+    private void SignOut() {
+        //Save token
+        SharedPreferences preferences = getSharedPreferences("User_info", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("isLogged", "");
+        editor.commit();
+
+        conn.unauth();
+
+        Intent intent = new Intent(ShopList.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
     protected void onStart(){
         super.onStart();
 
+        final View.OnClickListener mOnClickListener;
+
         //UserID
-        final FirebaseUser userID = FirebaseAuth.getInstance().getCurrentUser();
+        //final FirebaseUser userID = FirebaseAuth.getInstance().getCurrentUser();
 
         final Firebase ItemRef = conn;
 
@@ -61,12 +175,25 @@ public class ShopList extends AppCompatActivity {
                 itemViewHolder.itemView.findViewById(R.id.item_del).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         posRef.removeValue();
 
-                        Toast.makeText(getApplication().getBaseContext(), posRef + " has been removed by " + userID, Toast.LENGTH_LONG).show();
+                        View coordinatorLayout = getCurrentFocus();
+                        Snackbar snackbar = Snackbar
+                            .make(coordinatorLayout, "Item has been deleted!", Snackbar.LENGTH_LONG)
+                            .setAction("UNDO", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Snackbar snackbar1 = Snackbar.make(getCurrentFocus(), "Item was restored!", Snackbar.LENGTH_SHORT);
+
+                                    snackbar1.show();
+                                }
+                            });
+
+                        snackbar.show();
+
                     }
                 });
-
             }
         };
         mRecyclerView.setAdapter(adapter);
@@ -82,19 +209,5 @@ public class ShopList extends AppCompatActivity {
             label = (TextView)v.findViewById(R.id.item_label);
             qty = (TextView)v.findViewById(R.id.item_qty);
         }
-    }
-
-    public void SignOut(View view){
-        //Save token
-        SharedPreferences preferences = getSharedPreferences("User_info", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("isLogged", "");
-        editor.commit();
-
-        conn.unauth();
-
-        Intent intent = new Intent(ShopList.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

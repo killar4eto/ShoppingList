@@ -11,23 +11,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="baa.shoppinglist.ShopList">
 
+
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/recyclerView"
-        android:layout_below="@+id/SignOut" />
-
-    <Button
-        android:text="@string/signout"
-        android:layout_width="wrap_content"
-        android:onClick="SignOut"
-        android:layout_height="wrap_content"
-        android:id="@+id/SignOut"
-        tools:ignore="RelativeOverlap"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true" />
+        android:id="@+id/recyclerView" />
 
 
 </RelativeLayout>

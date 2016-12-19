@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Add Item"
+        android:id="@+id/additem"
+        tools:ignore="HardcodedText" />
+
+    <item android:title="Clear List"
+        android:id="@+id/clearAll"
+        tools:ignore="HardcodedText" />
+
+    <item android:title="Share"
+        android:id="@+id/share"
+        tools:ignore="HardcodedText" />
+
+    <item android:title="Change Background"
+        android:id="@+id/changeBG"
+        tools:ignore="HardcodedText" />
+
+    <item android:title="Revert Background"
+        android:id="@+id/revertBG"
+        tools:ignore="HardcodedText" />
+
+    <item android:title="Sign Out"
+        android:id="@+id/signout"
+        tools:ignore="HardcodedText" />
+
+</menu>
