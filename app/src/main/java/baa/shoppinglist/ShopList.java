@@ -97,11 +97,11 @@ public class ShopList extends AppCompatActivity {
     }
 
     private void Share() {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, "Sending my data...");
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain"); //MIME type
+        String textToShare = String.valueOf(mRecyclerView);
+        intent.putExtra(Intent.EXTRA_TEXT, textToShare);
+        startActivity(intent);
     }
 
     private void ClearAll() {
@@ -133,10 +133,6 @@ public class ShopList extends AppCompatActivity {
         startActivity(intent);
         finish();
 
-
-        //ShoppingItems as = new ShoppingItems("NewItemADD", 25);
-        //conn.push().setValue(as);
-
     }
 
     private void SignOut() {
@@ -154,10 +150,8 @@ public class ShopList extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
-
-        final View.OnClickListener mOnClickListener;
 
         //UserID
         //final FirebaseUser userID = FirebaseAuth.getInstance().getCurrentUser();
@@ -166,7 +160,7 @@ public class ShopList extends AppCompatActivity {
 
         FirebaseRecyclerAdapter<ShoppingItems, ItemViewHolder> adapter = new FirebaseRecyclerAdapter<ShoppingItems, ItemViewHolder>(ShoppingItems.class, R.layout.custom_list, ItemViewHolder.class, ItemRef) {
             @Override
-            protected void populateViewHolder(ItemViewHolder itemViewHolder, ShoppingItems item, final int position) {
+            protected void populateViewHolder(ItemViewHolder itemViewHolder, final ShoppingItems item, final int position) {
                 final Firebase posRef = this.getRef(position);
 
                 itemViewHolder.label.setText(item.getLabel());
@@ -176,19 +170,26 @@ public class ShopList extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
+                        final String oldItem = item.getLabel();
+                        final int oldQty = item.getQty();
+
                         posRef.removeValue();
 
                         View coordinatorLayout = getCurrentFocus();
                         Snackbar snackbar = Snackbar
-                            .make(coordinatorLayout, "Item has been deleted!", Snackbar.LENGTH_LONG)
-                            .setAction("UNDO", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    Snackbar snackbar1 = Snackbar.make(getCurrentFocus(), "Item was restored!", Snackbar.LENGTH_SHORT);
+                                .make(coordinatorLayout, item.getLabel() + " has been deleted!", Snackbar.LENGTH_LONG)
+                                .setAction("UNDO", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
 
-                                    snackbar1.show();
-                                }
-                            });
+                                        ShoppingItems restoreData = new ShoppingItems(oldItem, oldQty);
+                                        conn.push().setValue(restoreData);
+
+                                        Snackbar snackbar1 = Snackbar.make(getCurrentFocus(), oldItem + " was restored!", Snackbar.LENGTH_SHORT);
+
+                                        snackbar1.show();
+                                    }
+                                });
 
                         snackbar.show();
 
